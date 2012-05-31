@@ -18,18 +18,27 @@ ldr.show();
 <p>You can pass an options object to the plugin with several parameters. At the momente these parameters are:</p>
 <ul>
 <li>image - (url of an image)</li>
-<li>cssClass - (the class name of the loader element)</li>
+<li>backgroundClass - (class of the background element)</li>
+<li>loaderClass - (the class name of the loader element)</li>
 </ul>
-<p>You can also pass a function to the show and hide function that will be executed right after it has finished.</p>
+<p>You can also pass a options object to the show and hide function that can contain pretty neat things like</p>
+<ul>
+<li>elements - a jQuery object (or a array of objects) that will be overlayed by the loader</li>
+<li>after - a function that will be executet right after the function finishes</li>
+</ul>
+<h2>Example</h2>
 <pre><code>var ldr = $.loader({
     image: 'loader_black.gif'
 });
 
-ldr.show(function() {
-    window.setTimeout(
-        function() {ldr.hide();},
-        3000
-    );
+ldr.show({
+    elements: [$('body'), $(#myElement)],
+    after: function() {
+        window.setTimeout(
+            function() {ldr.hide();},
+            3000
+        );
+    }
 });
 </code></pre>
 <p>or a little more complex:</p>
@@ -37,18 +46,20 @@ ldr.show(function() {
     image: 'loader_black.gif'
 });
 
-ldr.show(function() {
-    window.setTimeout(
-        function() {ldr.hide(function() {
-            alert('finished loading');
-        });},
-        3000
-    );
+ldr.show({
+    elements: $('pre'),
+    after: function() {
+        window.setTimeout(function() {
+            ldr.hide({
+                after: function() {alert('finished loading');}
+            });
+        }, 3000);
+    }
 });
 </code></pre>
 
 <h2>Demo</h2>
-<a href="#" id="show3">show loader for 3 Seconds</a>
+<a href="#" id="show3">show loader for 3 Seconds</a> or <a href="#" id="showPre">show loader on all codeblocks</a>
 
 
 
@@ -61,8 +72,28 @@ ldr.show(function() {
 
 		$('#show3').on('click', function(e) {
 			e.preventDefault();
-			ldr.show(function() {
-				window.setTimeout(function() {ldr.hide(function() {alert('finished loading');});}, 3000);
+			ldr.show({
+				after: function() {
+					window.setTimeout(function() {
+						ldr.hide({
+							after: function() {alert('finished loading');}
+						});
+					}, 3000);
+				}
+			});
+		});
+
+		$('#showPre').on('click', function(e) {
+			e.preventDefault();
+			ldr.show({
+				elements: $('pre'),
+				after: function() {
+					window.setTimeout(function() {
+						ldr.hide({
+							after: function() {alert('finished loading');}
+						});
+					}, 3000);
+				}
 			});
 		});
 	</script>

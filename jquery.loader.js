@@ -2,46 +2,94 @@
 
 	var Loader = function(options) {
 		this.options = options;
-		this.init();
+
+		this.create_loader = function() {
+			var obj = {};
+
+			obj.container = $('<div>')
+				.addClass(this.options.backgroundClass)
+				.css('position', 'absolute')
+
+			obj.inner = $('<div>')
+				.addClass(this.options.loaderClass);
+
+			obj.image = $('<img>')
+				.attr('src', this.options.image);
+
+			obj.inner.append(obj.image);
+			obj.container.append(obj.inner);
+
+			obj.container.hide();
+
+			return obj;
+		}
+
 	}
 
-	Loader.prototype.init = function() {
-		this.container = $('<div>')
-			.attr('id', 'loader_background')
-			.css('width', '100%')
-			.css('height', '100%')
-			.css('position', 'fixed')
-			.css('top', '0px')
-			.css('left', '0px');
+	Loader.prototype.show = function(options) {
+		ths = this;
 
-		this.inner = $('<div>')
-			.attr('id', 'loader_inner')
-			.addClass(this.options.cssClass);
+		ths.elements = [];
+		ths.loaders = [];
 
-		this.image = $('<img>')
-			.attr('src', this.options.image);
+		if(options && options.elements) {
+			$.each(options.elements, function() {
+				if(this.length > 1) {
+					$.each(this, function() {
+						ths.elements.push(this);
+					});
+				} else {
+					ths.elements.push(this);
+				}
+			});
+		} else {
+			ths.elements.push($('body'));
+		}
 
-		this.inner.append(this.image);
-		this.container.append(this.inner);
+		$.each(ths.elements, function() {
+			var $this = $(this);
+			var obj = ths.create_loader();
 
-		this.container.hide();
-		$('body').append(this.container);
-	}
+			obj.container.css('top', $this.offset().top);
+			obj.container.css('left', $this.offset().left);
+			obj.container.height($this.height()+px2int($this.css('border-top-width'))+px2int($this.css('border-bottom-width')));
+			obj.container.width($this.width()+px2int($this.css('border-left-width'))+px2int($this.css('border-right-width')));
+			obj.container.css('padding', $this.css('padding'));
 
-	Loader.prototype.show = function(after) {
-		this.container.fadeIn(200, function() {
-			if(after && typeof(after) == 'function') {
-				after();
-			}
+			ths.loaders.push(obj.container);
+			$('body').append(obj.container);
+			
+			obj.container.fadeIn(200, function() {
+				if(options && options.after && typeof(options.after) == 'function') {
+					if(ths.loaders.length >= ths.elements.length) {
+						options.after();
+					}
+				}
+			});
 		});
+
 	}
 
-	Loader.prototype.hide = function(after) {
-		this.container.fadeOut(200, function() {
-			if(after && typeof(after) == 'function') {
-				after();
-			}
-		});
+	Loader.prototype.hide = function(options) {
+		ths = this;
+		
+		if(ths.loaders) {
+			$.each(ths.loaders, function() {
+
+				var elem = this;
+				elem.fadeOut(200, function() {
+					elem.remove();
+					ths.loaders.shift();
+					if(options && options.after && typeof(options.after) == 'function') {
+						if(ths.loaders.length < 1) {
+							options.after();
+						}
+					}
+				});
+
+			});
+		}
+		//var top = Math.round(elem.offset().top+(elem.height()/2)-($('#popup_'+type).height()/2))+10;
 	}
 
 	$.extend({
@@ -49,7 +97,8 @@
 
 			var defaults = {
 				image: 'http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/4-0.gif',
-				cssClass: 'loader_inner'
+				backgroundClass: 'loader_background',
+				loaderClass: 'loader_inner'
 			};
 
 			var opts = $.extend({}, defaults, options);
@@ -59,3 +108,9 @@
 	});
 
 }(jQuery));
+
+
+
+function px2int(string) {
+	return parseInt(string.replace('px', ''));
+}

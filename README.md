@@ -13,32 +13,43 @@ This is a simple jQuery plugin for managing a loading icon.
 You can pass an options object to the plugin with several parameters. At the momente these parameters are:
 
 - image - (url of an image)
-- cssClass - (the class name of the loader element)
+- backgroundClass - (class of the background element)
+- loaderClass - (the class name of the loader element)
 
-You can also pass a function to the show and hide function that will be executed right after it has finished.
+You can also pass a options object to the show and hide function that can contain pretty neat things like
 
-	var ldr = $	.loader({
+- elements - a jQuery object (or a array of objects) that will be overlayed by the loader
+- after - a function that will be executet right after the function finishes
+
+##Example
+
+	var ldr = $.loader({
 		image: 'loader_black.gif'
 	});
 
-	ldr.show(function() {
-		window.setTimeout(
-			function() {ldr.hide();},
-			3000
-		);
+	ldr.show({
+		elements: [$('body'), $(#myElement)],
+		after: function() {
+			window.setTimeout(
+				function() {ldr.hide();},
+				3000
+			);
+		}
 	});
 
 or a little more complex:
 
-	var ldr = $	.loader({
+	var ldr = $.loader({
 		image: 'loader_black.gif'
 	});
 
-	ldr.show(function() {
-		window.setTimeout(
-			function() {ldr.hide(function() {
-				alert('finished loading');
-			});},
-			3000
-		);
+	ldr.show({
+		elements: $('pre'),
+		after: function() {
+			window.setTimeout(function() {
+				ldr.hide({
+					after: function() {alert('finished loading');}
+				});
+			}, 3000);
+		}
 	});
