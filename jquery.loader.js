@@ -44,16 +44,18 @@
 		});
 	}
 
-	$.fn.loader = function (options) {
-		var opts = $.extend({}, $.fn.loader.defaults, options);
-		
-		return new Loader(opts);
-		
-	};
+	$.extend({
+		loader: function (options) {
 
-	$.fn.loader.defaults = {
-		image: 'http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/4-0.gif',
-		cssClass: 'loader_inner'
-	};
+			var defaults = {
+				image: 'http://www.ajaxload.info/cache/FF/FF/FF/00/00/00/4-0.gif',
+				cssClass: 'loader_inner'
+			};
+
+			var opts = $.extend({}, defaults, options);
+			
+			return new Loader(opts);
+		}
+	});
 
 }(jQuery));

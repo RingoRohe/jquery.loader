@@ -9,7 +9,7 @@
 <h1>jQuery loader plugin</h1>
 <p>This is a simple jQuery plugin for managing a loading icon.</p>
 <h2>basic usage</h2>
-<pre><code>var ldr = $('body').loader({
+<pre><code>var ldr = $.loader({
     image: 'loader_black.gif'
 });
 
@@ -21,7 +21,7 @@ ldr.show();
 <li>cssClass - (the class name of the loader element)</li>
 </ul>
 <p>You can also pass a function to the show and hide function that will be executed right after it has finished.</p>
-<pre><code>var ldr = $('body').loader({
+<pre><code>var ldr = $.loader({
     image: 'loader_black.gif'
 });
 
@@ -33,7 +33,7 @@ ldr.show(function() {
 });
 </code></pre>
 <p>or a little more complex:</p>
-<pre><code>var ldr = $('body').loader({
+<pre><code>var ldr = $.loader({
     image: 'loader_black.gif'
 });
 
@@ -55,7 +55,7 @@ ldr.show(function() {
 	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
 	<script type="text/javascript" src="jquery.loader.js"></script>
 	<script type="text/javascript">
-		var ldr = $('body').loader({
+		var ldr = $.loader({
 			image: 'loader_black.gif'
 		});
 
