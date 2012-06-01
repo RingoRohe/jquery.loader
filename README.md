@@ -53,3 +53,7 @@ or a little more complex:
 			}, 3000);
 		}
 	});
+
+##Demo
+
+[demo link](http://scripts.madewithco.de/jquery.loader#demo)
