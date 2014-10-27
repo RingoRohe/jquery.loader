@@ -56,4 +56,4 @@ or a little more complex:
 
 ##Demo
 
-[demo link](http://scripts.madewithco.de/jquery.loader#demo)
+[demo link](http://ringorohe.github.io/jquery.loader/)
